@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amina Marriage Bureau — Trusted Matrimonial Matching</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#26241f;
+    --ivory:#faf6ee;
+    --card:#ffffff;
+    --emerald:#0e3b34;
+    --emerald-deep:#082722;
+    --gold:#c6a15b;
+    --gold-soft:#e7d5ad;
+    --rust:#8c3b2e;
+    --line:#e4dcc9;
+    --shadow: 0 20px 50px -25px rgba(14,59,52,0.35);
+    --radius: 4px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    color:var(--emerald-deep);
+    margin:0;
+  }
+  .eyebrow{
+    font-family:'Jost',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.22em;
+    font-size:0.72rem;
+    font-weight:600;
+    color:var(--gold);
+  }
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+  button{font-family:'Jost',sans-serif; cursor:pointer;}
+
+  /* ---------- decorative star motif ---------- */
+  .star-divider{
+    height:34px;
+    width:100%;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='34' viewBox='0 0 60 34'%3E%3Cpath d='M30 3 L34 14 L46 17 L34 20 L30 31 L26 20 L14 17 L26 14 Z' fill='none' stroke='%23c6a15b' stroke-width='1.1' opacity='0.55'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;
+    background-size:60px 34px;
+    background-position:center;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,246,238,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .mark{
+    width:34px; height:34px; flex-shrink:0;
+  }
+  .brand-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.4rem; font-weight:700; color:var(--emerald-deep);
+    letter-spacing:0.01em;
+  }
+  .brand-text span{color:var(--gold);}
+  nav.links{display:flex; gap:30px; align-items:center;}
+  nav.links a{
+    font-size:0.9rem; font-weight:500; text-decoration:none; color:var(--emerald-deep);
+    position:relative;
+  }
+  nav.links a::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:1px;
+    background:var(--gold); transition:width .25s ease;
+  }
+  nav.links a:hover::after{width:100%;}
+  .cta-btn{
+    background:var(--emerald); color:var(--ivory); border:none;
+    padding:11px 24px; border-radius:var(--radius); font-size:0.88rem; font-weight:600;
+    letter-spacing:0.03em; transition:background .2s ease, transform .2s ease;
+  }
+  .cta-btn:hover{background:var(--emerald-deep); transform:translateY(-1px);}
+  .menu-toggle{display:none; background:none; border:none; font-size:1.6rem; color:var(--emerald-deep);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(198,161,91,0.18), transparent 45%),
+      linear-gradient(180deg, var(--emerald-deep), var(--emerald) 70%);
+    color:var(--ivory);
+    overflow:hidden;
+    padding:100px 0 90px;
+  }
+  .hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M60 6 L70 44 L108 54 L70 64 L60 102 L50 64 L12 54 L50 44 Z' fill='none' stroke='%23c6a15b' stroke-width='0.8' opacity='0.16'/%3E%3C/svg%3E");
+    background-size:120px 120px;
+    pointer-events:none;
+  }
+  .hero-inner{position:relative; z-index:2; display:grid; grid-template-columns:1.15fr 0.85fr; gap:50px; align-items:center;}
+  .hero h1{
+    font-size:clamp(2.4rem, 4.6vw, 3.6rem);
+    color:#fff; line-height:1.08; margin:14px 0 20px;
+  }
+  .hero h1 em{color:var(--gold); font-style:italic;}
+  .hero p.lead{
+    font-size:1.05rem; max-width:480px; color:#e9e4d6; margin-bottom:32px;
+  }
+  .hero-cta{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--gold); color:var(--emerald-deep); border:none;
+    padding:14px 30px; font-weight:700; border-radius:var(--radius); font-size:0.95rem;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 24px -10px rgba(198,161,91,0.6);}
+  .btn-ghost{
+    background:transparent; border:1px solid rgba(255,255,255,0.4); color:#fff;
+    padding:14px 26px; border-radius:var(--radius); font-size:0.95rem; font-weight:500;
+  }
+  .btn-ghost:hover{border-color:var(--gold); color:var(--gold);}
+  .hero-emblem{
+    justify-self:center;
+    width:280px; height:280px; position:relative;
+  }
+  .hero-emblem svg{width:100%; height:100%;}
+
+  /* ---------- section shell ---------- */
+  section{padding:88px 0;}
+  .section-head{max-width:640px; margin:0 auto 52px; text-align:center;}
+  .section-head h2{font-size:clamp(1.9rem,3.2vw,2.6rem); margin-top:10px;}
+  .section-head p{color:#5a5748; margin-top:14px; font-size:1rem;}
+
+  /* ---------- about / values ---------- */
+  .values-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:28px;}
+  .value-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:34px 28px; box-shadow:var(--shadow);
+  }
+  .value-card .num{
+    font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:var(--gold); font-weight:700;
+  }
+  .value-card h3{font-size:1.3rem; margin:8px 0 10px;}
+  .value-card p{color:#5a5748; font-size:0.94rem; margin:0;}
+
+  /* ---------- process ---------- */
+  .process{background:var(--emerald-deep); color:var(--ivory);}
+  .process .section-head h2{color:#fff;}
+  .process .section-head p{color:#cfd0c4;}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; counter-reset:step;}
+  .step{
+    position:relative; padding:26px 20px 20px; border-left:1px solid rgba(198,161,91,0.35);
+  }
+  .step .step-index{
+    font-family:'Cormorant Garamond',serif; font-size:2.4rem; color:var(--gold); line-height:1;
+  }
+  .step h3{color:#fff; font-size:1.15rem; margin:10px 0 8px;}
+  .step p{color:#cfd0c4; font-size:0.9rem; margin:0;}
+
+  /* ---------- form ---------- */
+  .form-section{background:var(--ivory);}
+  .form-card{
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    box-shadow:var(--shadow); padding:44px; max-width:880px; margin:0 auto;
+  }
+  fieldset{border:none; padding:0; margin:0 0 34px;}
+  fieldset legend{
+    font-family:'Cormorant Garamond',serif; font-size:1.35rem; color:var(--emerald-deep);
+    padding-bottom:8px; margin-bottom:18px; width:100%; border-bottom:1px solid var(--line);
+  }
+  .field-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px 24px;}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field.full{grid-column:1 / -1;}
+  label{font-size:0.85rem; font-weight:600; color:var(--emerald-deep);}
+  label .opt{font-weight:400; color:#9a9584; font-style:italic;}
+  input[type="text"], input[type="date"], input[type="number"], input[type="email"],
+  input[type="tel"], select, textarea{
+    font-family:'Jost',sans-serif;
+    padding:11px 13px; border:1px solid #d9d2bd; border-radius:4px; font-size:0.95rem;
+    background:#fdfcf8; color:var(--ink); transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  textarea{resize:vertical; min-height:80px;}
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(198,161,91,0.18);
+  }
+  .upload-box{
+    border:1.5px dashed #c9bd9c; border-radius:6px; padding:26px; text-align:center;
+    background:#fdfcf8; cursor:pointer; transition:border-color .2s ease, background .2s ease;
+  }
+  .upload-box:hover{border-color:var(--gold); background:#fbf6e9;}
+  .upload-box.has-image{padding:14px;}
+  .upload-box input{display:none;}
+  #photoPreview{
+    max-height:170px; margin:0 auto 10px; border-radius:4px; display:none; box-shadow:0 8px 20px -10px rgba(0,0,0,0.3);
+  }
+  .upload-hint{font-size:0.82rem; color:#8a8570;}
+  .photo-warning{
+    font-size:0.88rem; color:var(--rust); margin:0 0 12px; font-weight:500; line-height:1.5;
+  }
+  .photo-warning strong{font-weight:700;}
+  .payment-notice{
+    background:#fbf6e9; border:1px solid var(--gold-soft); border-left:4px solid var(--gold);
+    border-radius:4px; padding:20px 22px;
+  }
+  .payment-notice p{margin:0 0 8px; font-size:0.92rem; color:var(--emerald-deep);}
+  .payment-notice p:last-child{margin-bottom:0; color:var(--rust); font-weight:600;}
+  .legal-notice{border-left-color:var(--rust); background:#fbf1ee;}
+  .legal-notice p, .legal-notice p:last-child{color:var(--rust); font-weight:500; margin:0;}
+  .submit-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-top:8px;}
+  .required-note{font-size:0.82rem; color:#8a8570;}
+  .required-note b{color:var(--rust);}
+
+  /* ---------- results / preview ---------- */
+  .results{display:none;}
+  .results.show{display:block;}
+  .result-actions{
+    display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:36px 0 10px;
+  }
+  .btn-secondary{
+    background:transparent; border:1.4px solid var(--emerald); color:var(--emerald);
+    padding:12px 26px; border-radius:4px; font-weight:600; font-size:0.9rem;
+  }
+  .btn-secondary:hover{background:var(--emerald); color:#fff;}
+
+  .paper{
+    background:#fff; border:1px solid var(--line); box-shadow:var(--shadow);
+    max-width:720px; margin:0 auto 34px; padding:46px 50px; border-radius:2px; position:relative;
+  }
+  .paper::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:6px;
+    background:linear-gradient(90deg,var(--emerald),var(--gold));
+  }
+  .paper-head{text-align:center; margin-bottom:30px;}
+  .paper-head .eyebrow{display:block; margin-bottom:6px;}
+  .paper-head h3{font-size:1.6rem;}
+  .paper-head .page-tag{font-size:0.78rem; letter-spacing:0.15em; text-transform:uppercase; color:#9a9584; margin-top:6px;}
+  .info-table{width:100%; border-collapse:collapse;}
+  .info-table tr{border-bottom:1px solid #efe9d8;}
+  .info-table tr:last-child{border-bottom:none;}
+  .info-table td{padding:11px 6px; font-size:0.92rem; vertical-align:top;}
+  .info-table td.k{width:38%; font-weight:600; color:var(--emerald-deep);}
+  .info-table td.v{color:#3a3730;}
+  .photo-page{text-align:center;}
+  .photo-page img{
+    max-width:100%; max-height:560px; margin:0 auto; border-radius:3px;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,0.4);
+  }
+  .photo-page .cap{margin-top:18px; font-family:'Cormorant Garamond',serif; font-size:1.15rem; color:var(--emerald-deep);}
+
+  footer{
+    background:var(--emerald-deep); color:#cfd0c4; padding:44px 0 30px; font-size:0.88rem;
+  }
+  .footer-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  footer .brand-text{color:#fff;}
+  footer a{text-decoration:none; opacity:0.85;}
+  footer a:hover{opacity:1; color:var(--gold);}
+
+  @media (max-width: 880px){
+    .hero-inner{grid-template-columns:1fr; text-align:center;}
+    .hero p.lead{margin-left:auto; margin-right:auto;}
+    .hero-cta{justify-content:center;}
+    .hero-emblem{width:200px; height:200px;}
+    .values-grid{grid-template-columns:1fr 1fr;}
+    .steps{grid-template-columns:1fr 1fr;}
+    .field-grid{grid-template-columns:1fr;}
+    .form-card{padding:30px 22px;}
+    .paper{padding:32px 24px;}
+  }
+  @media (max-width: 620px){
+    nav.links{
+      position:absolute; top:100%; left:0; right:0; background:var(--ivory);
+      flex-direction:column; padding:20px 28px; gap:18px; border-bottom:1px solid var(--line);
+      display:none;
+    }
+    nav.links.open{display:flex;}
+    .menu-toggle{display:block;}
+    .cta-btn{display:none;}
+    .values-grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;}
+    .step{border-left:none; border-top:1px solid rgba(198,161,91,0.35); padding-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 40 40" fill="none">
+        <path d="M20 3 L23.5 15.5 L36 20 L23.5 24.5 L20 37 L16.5 24.5 L4 20 L16.5 15.5 Z" stroke="#c6a15b" stroke-width="1.4"/>
+      </svg>
+      <div class="brand-text">Amina <span>Marriage Bureau</span></div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">&#9776;</button>
+    <nav class="links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#process">How It Works</a>
+      <a href="#register">Register</a>
+    </nav>
+    <a href="#register" class="cta-btn">Begin Registration</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow" style="color:var(--gold)">A trusted matrimonial service</span>
+      <h1>Where two families<br>begin <em>one story</em>.</h1>
+      <p class="lead">Amina Marriage Bureau brings sincerity and care to the search for a life partner — guiding families through every step, from first introduction to a blessed nikah.</p>
+      <div class="hero-cta">
+        <a href="#register" class="btn-primary">Start Your Registration</a>
+        <a href="#process" class="btn-ghost">See How It Works</a>
+      </div>
+    </div>
+    <div class="hero-emblem">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="94" fill="none" stroke="#c6a15b" stroke-width="1" opacity="0.5"/>
+        <g stroke="#c6a15b" stroke-width="1.1" fill="none" opacity="0.85">
+          <path d="M100 20 L112 75 L167 88 L112 100 L100 155 L88 100 L33 88 L88 75 Z"/>
+          <path d="M100 45 L107 80 L142 88 L107 96 L100 131 L93 96 L58 88 L93 80 Z" opacity="0.55"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+<div class="star-divider"></div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Our Approach</span>
+      <h2>Careful matching, rooted in trust</h2>
+      <p>Every profile is guided personally — we take the time to understand family values, expectations, and character before any introduction is made.</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="num">01</div>
+        <h3>Confidential</h3>
+        <p>Your details and photograph are shared only with families you or your guardian approve.</p>
+      </div>
+      <div class="value-card">
+        <div class="num">02</div>
+        <h3>Personal Guidance</h3>
+        <p>Our team reviews every registration and helps shortlist matches that reflect what truly matters to your family.</p>
+      </div>
+      <div class="value-card">
+        <div class="num">03</div>
+        <h3>Rooted in Values</h3>
+        <p>We honour Islamic principles of modesty and respect throughout the entire matching process.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="color:var(--gold)">The Journey</span>
+      <h2>How it works</h2>
+      <p>A simple, respectful path from registration to a meaningful introduction.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-index">1</div><h3>Register</h3><p>Complete the form with your family and personal details, along with a recent photograph.</p></div>
+      <div class="step"><div class="step-index">2</div><h3>Review</h3><p>Our team verifies the information and prepares your confidential profile.</p></div>
+      <div class="step"><div class="step-index">3</div><h3>Match</h3><p>We identify compatible profiles based on values, background, and expectations.</p></div>
+      <div class="step"><div class="step-index">4</div><h3>Introduce</h3><p>With family consent, we arrange a respectful first introduction.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="form-section" id="register">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Registration</span>
+      <h2>Create your profile</h2>
+      <p>Please fill in the details below carefully. Fields marked <b style="color:var(--rust)">*</b> are required.</p>
+    </div>
+
+    <div class="form-card" id="formCard">
+      <form id="regForm" novalidate>
+
+        <fieldset>
+          <legend>Personal Details</legend>
+          <div class="field-grid">
+            <div class="field full">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" required>
+            </div>
+            <div class="field">
+              <label for="dob">Date of Birth *</label>
+              <input type="text" id="dob" placeholder="dd/mm/yyyy" inputmode="numeric" maxlength="10" pattern="\d{2}/\d{2}/\d{4}" title="Enter date as dd/mm/yyyy" required>
+            </div>
+            <div class="field">
+              <label for="age">Age *</label>
+              <input type="number" id="age" min="18" max="80" required>
+            </div>
+            <div class="field">
+              <label for="height">Height <span class="opt">(optional)</span></label>
+              <input type="text" id="height" placeholder="e.g., 5 ft 6 in">
+            </div>
+            <div class="field">
+              <label for="weight">Weight <span class="opt">(optional)</span></label>
+              <input type="text" id="weight" placeholder="e.g., 60 kg">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Religious &amp; Marital Details</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="religion">Religion *</label>
+              <input type="text" id="religion" value="Islam" required readonly>
+            </div>
+            <div class="field">
+              <label for="sect">Sect <span class="opt">(optional, e.g., Sunni)</span></label>
+              <input type="text" id="sect" placeholder="e.g., Sunni">
+            </div>
+            <div class="field full">
+              <label for="maritalStatus">Marital Status *</label>
+              <select id="maritalStatus" required>
+                <option value="Never Married" selected>Never Married</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Widowed">Widowed</option>
+                <option value="Annulled">Annulled</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Education &amp; Career</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="education">Education *</label>
+              <input type="text" id="education" placeholder="e.g., B.Sc. Computer Science" required>
+            </div>
+            <div class="field">
+              <label for="occupation">Occupation *</label>
+              <input type="text" id="occupation" placeholder="e.g., Software Engineer" required>
+            </div>
+            <div class="field full">
+              <label style="display:flex; align-items:center; gap:8px; font-weight:500;">
+                <input type="checkbox" id="hasBusiness" style="width:auto; margin:0;">
+                <span>I run my own business (instead of a job)</span>
+              </label>
+            </div>
+            <div class="field">
+              <label for="companyName">Company Name *</label>
+              <input type="text" id="companyName" placeholder="e.g., Tata Consultancy Services" required>
+            </div>
+            <div class="field">
+              <label for="monthlyIncome">Monthly Income *</label>
+              <input type="text" id="monthlyIncome" placeholder="e.g., Rs. 50,000 per month" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Address &amp; Contact</legend>
+          <div class="field-grid">
+            <div class="field full">
+              <label for="address">Address *</label>
+              <textarea id="address" required></textarea>
+            </div>
+            <div class="field full">
+              <label for="contact">Contact Details *</label>
+              <input type="text" id="contact" placeholder="Phone number and/or email address" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Family Details</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="fatherName">Father's Name &amp; Occupation *</label>
+              <input type="text" id="fatherName" placeholder="e.g., Mr. Ahmed Khan, Businessman" required>
+            </div>
+            <div class="field">
+              <label for="motherName">Mother's Name &amp; Occupation *</label>
+              <input type="text" id="motherName" placeholder="e.g., Mrs. Sana Khan, Homemaker" required>
+            </div>
+            <div class="field full">
+              <label for="siblings">Number of Brothers/Sisters *</label>
+              <input type="text" id="siblings" placeholder="e.g., 2 brothers, 1 sister" required>
+            </div>
+            <div class="field full">
+              <label for="siblingsMarried">Number of Brothers/Sisters Married *</label>
+              <input type="text" id="siblingsMarried" placeholder="e.g., 1 brother married, 1 sister married" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>A Little More <span class="opt" style="font-family:'Jost',sans-serif; font-size:0.75rem;">(optional)</span></legend>
+          <div class="field-grid">
+            <div class="field full">
+              <label for="hobbies">Hobbies <span class="opt">(optional)</span></label>
+              <textarea id="hobbies" placeholder="e.g., Reading, cooking, travelling"></textarea>
+            </div>
+            <div class="field full">
+              <label for="expectations">Expectations from the Partner <span class="opt">(optional)</span></label>
+              <textarea id="expectations" placeholder="Share what matters most to you"></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Photograph</legend>
+          <div class="field full">
+            <label for="photoInput" style="margin-bottom:10px;">Upload a recent photograph *</label>
+            <p class="photo-warning"><strong>No filtered images will be accepted.</strong> Please do not use Snapchat, Instagram, or any other filters/beauty effects — upload a clear, natural, unedited photo only.</p>
+            <div class="upload-box" id="uploadBox">
+              <input type="file" id="photoInput" accept="image/*" required>
+              <img id="photoPreview" alt="Preview of uploaded photograph">
+              <div id="uploadText">
+                <div style="font-size:1.6rem; color:var(--gold); margin-bottom:6px;">&#8613;</div>
+                <div style="font-weight:600; color:var(--emerald-deep);">Click to upload photo</div>
+                <div class="upload-hint">JPG or PNG, clear face photo recommended</div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Payment Information</legend>
+          <div class="payment-notice">
+            <p><strong>Registration Fee:</strong> Rs. 400 payable in advance to activate your registration.</p>
+            <p><strong>Success Fee:</strong> Rs. 12,000 payable on the day of the Nikah.</p>
+            <p>For payment, please contact the owner directly: <strong>9371020874</strong></p>
+          </div>
+          <div class="field full" style="margin-top:16px;">
+            <label style="display:flex; align-items:flex-start; gap:10px; font-weight:500;">
+              <input type="checkbox" id="paymentAgree" required style="margin-top:3px; width:auto;">
+              <span>I have read and agree to the payment terms mentioned above. *</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Declaration</legend>
+          <div class="payment-notice legal-notice">
+            <p>All information provided in this form must be true and accurate. Any fraud, misbehaviour, or false information — including in relation to payment — is a punishable offence under applicable law. Legal action will be taken against individuals found engaging in such conduct.</p>
+            <p>If, at the time of Nikah, you refuse to pay the full amount of Rs. 12,000, or pay less than the agreed amount, Amina Marriage Bureau reserves the full right to report the matter to the police station and take appropriate legal action against you.</p>
+          </div>
+          <div class="field full" style="margin-top:16px;">
+            <label style="display:flex; align-items:flex-start; gap:10px; font-weight:500;">
+              <input type="checkbox" id="declarationAgree" required style="margin-top:3px; width:auto;">
+              <span>I declare that the information provided by me is true, and I understand that fraud, misbehaviour, false information, or refusal/underpayment of the Nikah-day amount will result in legal action, including a police complaint. *</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="submit-row">
+          <span class="required-note"><b>*</b> indicates a required field</span>
+          <button type="submit" class="btn-primary">Submit Registration</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="results" id="results">
+      <div class="section-head" style="margin-top:70px;">
+        <span class="eyebrow">Confirmation</span>
+        <h2>Registration received</h2>
+        <p>Here is a summary of the profile you submitted. You may download it as a keepsake PDF below.</p>
+      </div>
+
+      <div class="paper" id="paperInfo">
+        <div class="paper-head">
+          <span class="eyebrow">Amina Marriage Bureau</span>
+          <h3>Registration Summary</h3>
+          <div class="page-tag">Page 1 &middot; Profile Details</div>
+        </div>
+        <table class="info-table" id="infoTable"></table>
+      </div>
+
+      <div class="paper photo-page" id="paperPhoto">
+        <div class="paper-head">
+          <span class="eyebrow">Amina Marriage Bureau</span>
+          <h3 id="photoName">Photograph</h3>
+          <div class="page-tag">Page 2 &middot; Photograph</div>
+        </div>
+        <img id="resultPhoto" alt="Uploaded photograph">
+        <p class="cap">Submitted on <span id="submitDate"></span></p>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn-primary" id="downloadPdfBtn">Download as PDF</button>
+        <button class="btn-secondary" id="editBtn">Edit Details</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="brand-text serif">Amina Marriage Bureau</div>
+    <div>Registrations are confidential &middot; <a href="#register">Register now</a></div>
+  </div>
+</footer>
+
+<script>
+  // mobile nav
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.getElementById('navLinks');
+  menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // DOB: auto-format as dd/mm/yyyy while typing, and auto-calc age
+  const dobInput = document.getElementById('dob');
+  const ageInput = document.getElementById('age');
+
+  function parseDob(str){
+    const m = str.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if(!m) return null;
+    const day = parseInt(m[1], 10), month = parseInt(m[2], 10), year = parseInt(m[3], 10);
+    const d = new Date(year, month - 1, day);
+    if(d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
+    return d;
+  }
+
+  dobInput.addEventListener('input', () => {
+    let digits = dobInput.value.replace(/\D/g, '').slice(0, 8);
+    let formatted = digits;
+    if(digits.length > 4) formatted = digits.slice(0,2) + '/' + digits.slice(2,4) + '/' + digits.slice(4);
+    else if(digits.length > 2) formatted = digits.slice(0,2) + '/' + digits.slice(2);
+    dobInput.value = formatted;
+  });
+
+  dobInput.addEventListener('blur', () => {
+    if(!dobInput.value) return;
+    const dob = parseDob(dobInput.value);
+    if(!dob){
+      dobInput.setCustomValidity('Please enter a valid date as dd/mm/yyyy');
+      return;
+    }
+    dobInput.setCustomValidity('');
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if(m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    if(age > 0 && age < 100) ageInput.value = age;
+  });
+
+  // photo upload preview
+  const photoInput = document.getElementById('photoInput');
+  const photoPreview = document.getElementById('photoPreview');
+  const uploadBox = document.getElementById('uploadBox');
+  const uploadText = document.getElementById('uploadText');
+  let uploadedImageData = null;
+
+  uploadBox.addEventListener('click', (e) => {
+    if(e.target !== photoInput) photoInput.click();
+  });
+
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      uploadedImageData = e.target.result;
+      photoPreview.src = uploadedImageData;
+      photoPreview.style.display = 'block';
+      uploadText.style.display = 'none';
+      uploadBox.classList.add('has-image');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // business owner: auto-fill Company Name & Monthly Income with "Business"
+  const hasBusiness = document.getElementById('hasBusiness');
+  const companyNameInput = document.getElementById('companyName');
+  const monthlyIncomeInput = document.getElementById('monthlyIncome');
+  hasBusiness.addEventListener('change', () => {
+    if(hasBusiness.checked){
+      companyNameInput.value = 'Business';
+      monthlyIncomeInput.value = 'Business';
+      companyNameInput.readOnly = true;
+      monthlyIncomeInput.readOnly = true;
+    } else {
+      companyNameInput.value = '';
+      monthlyIncomeInput.value = '';
+      companyNameInput.readOnly = false;
+      monthlyIncomeInput.readOnly = false;
+    }
+  });
+
+  // form submit
+  const form = document.getElementById('regForm');
+  const formCard = document.getElementById('formCard');
+  const results = document.getElementById('results');
+  const infoTable = document.getElementById('infoTable');
+  const resultPhoto = document.getElementById('resultPhoto');
+  const photoName = document.getElementById('photoName');
+  const submitDate = document.getElementById('submitDate');
+
+  function fieldRows(){
+    const val = id => document.getElementById(id).value.trim() || '—';
+    return [
+      ['Full Name', val('fullName')],
+      ['Date of Birth', val('dob')],
+      ['Age', val('age')],
+      ['Height', val('height')],
+      ['Weight', val('weight')],
+      ['Religion', val('religion')],
+      ['Sect', val('sect')],
+      ['Marital Status', val('maritalStatus')],
+      ['Education', val('education')],
+      ['Occupation', val('occupation')],
+      ['Company Name', val('companyName')],
+      ['Monthly Income', val('monthlyIncome')],
+      ['Address', val('address')],
+      ["Father's Name & Occupation", val('fatherName')],
+      ["Mother's Name & Occupation", val('motherName')],
+      ['Number of Brothers/Sisters', val('siblings')],
+      ['Number of Brothers/Sisters Married', val('siblingsMarried')],
+      ['Contact Details', val('contact')],
+      ['Hobbies', val('hobbies')],
+      ['Expectations from Partner', val('expectations')],
+      ['Registration Fee (Advance)', 'Rs. 400'],
+      ['Success Fee (On Nikah Day)', 'Rs. 12,000'],
+      ['Payment Contact', '9371020874'],
+      ['Declaration', 'Information declared true. Fraud, misbehaviour, or false information will lead to legal action. Refusing or underpaying the Rs. 12,000 due on the day of Nikah gives Amina Marriage Bureau the right to report the matter to the police and take legal action.'],
+    ];
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(!form.checkValidity()){
+      form.reportValidity();
+      return;
+    }
+    if(!uploadedImageData){
+      alert('Please upload a photograph before submitting.');
+      return;
+    }
+
+    const rows = fieldRows();
+    infoTable.innerHTML = rows.map(([k,v]) => `
+      <tr><td class="k">${k}</td><td class="v">${escapeHtml(v)}</td></tr>
+    `).join('');
+
+    resultPhoto.src = uploadedImageData;
+    photoName.textContent = document.getElementById('fullName').value.trim() || 'Photograph';
+    submitDate.textContent = new Date().toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' });
+
+    formCard.style.display = 'none';
+    results.classList.add('show');
+    results.scrollIntoView({ behavior:'smooth' });
+  });
+
+  document.getElementById('editBtn').addEventListener('click', () => {
+    results.classList.remove('show');
+    formCard.style.display = 'block';
+    formCard.scrollIntoView({ behavior:'smooth' });
+  });
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.innerText = str;
+    return d.innerHTML;
+  }
+
+  // PDF generation — clean, ruled, perfectly aligned layout
+  document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 48;
+    const headerHeight = 60;
+    const footerY = pageHeight - 30;
+    const labelColX = margin;
+    const valueColX = margin + 168;
+    const valueColWidth = pageWidth - margin - valueColX;
+    const rowLineHeight = 11.5;
+    const rowPadding = 6;
+
+    function drawHeader(subtitle){
+      doc.setFillColor(14, 59, 52);
+      doc.rect(0, 0, pageWidth, headerHeight, 'F');
+      doc.setDrawColor(198, 161, 91);
+      doc.setLineWidth(2);
+      doc.line(0, headerHeight, pageWidth, headerHeight);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('times', 'bold');
+      doc.setFontSize(17);
+      doc.text('Amina Marriage Bureau', margin, 28);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(224, 219, 198);
+      doc.text(subtitle, margin, 45);
+    }
+
+    function drawFooter(pageLabel){
+      doc.setDrawColor(226, 219, 200);
+      doc.setLineWidth(0.6);
+      doc.line(margin, footerY - 14, pageWidth - margin, footerY - 14);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(150, 145, 125);
+      doc.text('Amina Marriage Bureau \u2014 Confidential Registration Record', margin, footerY);
+      doc.text(pageLabel, pageWidth - margin, footerY, { align: 'right' });
+    }
+
+    // ---- Page 1: profile details, as a clean ruled table ----
+    drawHeader('Registration Summary');
+    let y = headerHeight + 26;
+    const rows = fieldRows();
+
+    rows.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.8);
+      doc.setTextColor(14, 59, 52);
+      const labelLines = doc.splitTextToSize(label, valueColX - labelColX - 12);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.8);
+      doc.setTextColor(45, 43, 36);
+      const valueLines = doc.splitTextToSize(String(value || '\u2014'), valueColWidth);
+
+      const lineCount = Math.max(labelLines.length, valueLines.length);
+      const blockHeight = lineCount * rowLineHeight;
+
+      // page-break check before drawing this row
+      if (y + blockHeight + rowPadding > footerY - 16) {
+        drawFooter('Page ' + doc.internal.getNumberOfPages());
+        doc.addPage();
+        drawHeader('Registration Summary (continued)');
+        y = headerHeight + 26;
+      }
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.8);
+      doc.setTextColor(14, 59, 52);
+      doc.text(labelLines, labelColX, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.8);
+      doc.setTextColor(45, 43, 36);
+      doc.text(valueLines, valueColX, y);
+
+      const rowBottom = y + blockHeight + rowPadding - 3;
+      doc.setDrawColor(232, 226, 208);
+      doc.setLineWidth(0.5);
+      doc.line(margin, rowBottom, pageWidth - margin, rowBottom);
+
+      y = rowBottom + rowPadding;
+    });
+
+    drawFooter('Page ' + doc.internal.getNumberOfPages());
+
+    // ---- Final page: full photograph ----
+    doc.addPage();
+    drawHeader('Photograph');
+
+    if (uploadedImageData) {
+      const mimeMatch = uploadedImageData.match(/^data:image\/(\w+);/);
+      const format = mimeMatch ? mimeMatch[1].toUpperCase().replace('JPG', 'JPEG') : 'JPEG';
+      const props = doc.getImageProperties(uploadedImageData);
+      const frameTop = headerHeight + 20;
+      const frameBottom = footerY - 40;
+      const maxW = pageWidth - margin * 2;
+      const maxH = frameBottom - frameTop;
+      let w = props.width, h = props.height;
+      const ratio = Math.min(maxW / w, maxH / h);
+      w *= ratio; h *= ratio;
+      const x = (pageWidth - w) / 2;
+      const yImg = frameTop + (maxH - h) / 2;
+
+      doc.setDrawColor(198, 161, 91);
+      doc.setLineWidth(1);
+      doc.rect(x - 8, yImg - 8, w + 16, h + 16);
+      doc.addImage(uploadedImageData, format, x, yImg, w, h);
+    }
+
+    const name = (document.getElementById('fullName').value.trim() || 'Registration').trim();
+    doc.setFont('times', 'italic');
+    doc.setFontSize(11);
+    doc.setTextColor(14, 59, 52);
+    doc.text(name, pageWidth / 2, footerY - 20, { align: 'center' });
+
+    drawFooter('Page ' + doc.internal.getNumberOfPages());
+
+    const fileName = name.replace(/\s+/g, '_');
+    doc.save(`${fileName}.pdf`);
+  });
+</script>
+</body>
+</html>
